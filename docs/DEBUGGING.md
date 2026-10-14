@@ -42,6 +42,12 @@ booking.EndTime > b.StartTime
 
 Nu kontrolleras att den nya bokningen börjar före den existerande bokningens slut och slutar efter dess start. Om båda villkoren uppfylls så överlappar bokningarna. Kontrollen gäller fortfarande bara aktiva bokningar för samma rum och datum.
 
+## Alternativ lösning
+
+En alternativ lösning hade varit att kontrollera varje typ av överlappning separat: att den nya bokningen börjar under den existerande, slutar under den eller omsluter hela den existerande bokningen. Det hade krävt fler villkor och gjort det lättare att missa något fall.
+
+Jag valde i stället att jämföra intervallens starttider och sluttider med två villkor. Lösningen är kortare och täcker alla typer av överlappning.
+
 ## Verifiering
 
 Jag verifierade att ändringen fungerade genom att skapa en bokning mellan klockan 09:00 och 11:00. Sedan skapade jag en ny bokning för samma rum och datum mellan 08:00 och 10:00. Systemet visade felmeddelandet: `The room is already booked during the selected time.` Jag kontrollerade också att den nekade bokningen inte sparades. Jag verifierade även att ändringen fungerade genom att skapa en bokning för samma rum och datum mellan klockan 11:00 och 12:00. Den bokningen godkändes och sparades.
