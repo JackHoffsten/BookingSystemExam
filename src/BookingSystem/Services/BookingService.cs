@@ -15,15 +15,11 @@ public class BookingService(IBookingRepository repository)
 
     public IReadOnlyList<Booking> GetActiveBookings()
     {
-        var bookings = repository.GetAll();
-
-        var sortedBookings = bookings
+        return repository.GetAll()
             .Where(b => !b.IsCancelled)
             .OrderBy(b => b.Date)
             .ThenBy(b => b.StartTime)
             .ToList();
-
-        return sortedBookings;
     }
 
     public IReadOnlyList<Booking> Search(string searchTerm)
