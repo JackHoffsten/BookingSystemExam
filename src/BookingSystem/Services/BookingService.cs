@@ -64,7 +64,7 @@ public class BookingService(IBookingRepository repository)
             return BookingResult.Failure("The selected room does not exist.");
         }
 
-        if (booking.StartTime == booking.EndTime)
+        if (booking.StartTime >= booking.EndTime)
         {
             return BookingResult.Failure("The start time must be earlier than the end time.");
         }
@@ -79,12 +79,12 @@ public class BookingService(IBookingRepository repository)
             return BookingResult.Failure($"{room.Name} has a maximum capacity of {room.Capacity}.");
         }
 
-        var hasOverlap = repository.GetAll().Any(existing =>
-            !existing.IsCancelled &&
-            existing.Date == booking.Date &&
-            existing.RoomName.Equals(booking.RoomName, StringComparison.OrdinalIgnoreCase) &&
-            booking.StartTime >= existing.StartTime &&
-            booking.StartTime < existing.EndTime);
+        var hasOverlap = repository.GetAll().Any(b =>
+            !b.IsCancelled &&
+            b.RoomName.Equals(booking.RoomName, StringComparison.OrdinalIgnoreCase) &&
+            b.Date == booking.Date &&
+            booking.StartTime < b.EndTime &&
+            booking.EndTime > b.StartTime);
 
         if (hasOverlap)
         {
